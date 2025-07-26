@@ -1,21 +1,19 @@
 name: Build and Release VSCode REH Linux ARM64
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
   push:
     tags:
-      - 'v*'          # Trigger on tags like v1.0.0
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Install system dependencies
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -23,27 +21,28 @@ jobs:
             libx11-dev libxkbfile-dev libsecret-1-dev \
             libkrb5-dev python-is-python3
 
-      # 3. Setup Node.js 22.15.1
       - name: Setup Node.js 22.15.1
         uses: actions/setup-node@v4
         with:
           node-version: 22.15.1
           cache: 'npm'
 
-      # 4. Install Node dependencies
       - name: Install npm dependencies
         run: npm ci
 
-      # 5. Build VSCode for Linux ARM64
       - name: Build VSCode (reh-linux-arm64-min)
         run: node node_modules/gulp/bin/gulp.js vscode-reh-linux-arm64-min
 
-      # 6. Upload artifact (optional debug)
+      - name: Move build folder into workspace
+        run: |
+          mkdir -p build-output
+          cp -r ../vscode-reh-linux-arm64 build-output/
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: vscode-reh-linux-arm64
-          path: ../vscode-reh-linux-arm64
+          path: build-output/vscode-reh-linux-arm64
 
   release:
     runs-on: ubuntu-latest
