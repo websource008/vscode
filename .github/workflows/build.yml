@@ -4,14 +4,14 @@ on:
   workflow_dispatch:  # Manual trigger
   push:
     tags:
-      - 'v*'          # Trigger on version tags like v1.0.0
+      - 'v*'          # Trigger on tags like v1.0.0
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repo
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -23,11 +23,11 @@ jobs:
             libx11-dev libxkbfile-dev libsecret-1-dev \
             libkrb5-dev python-is-python3
 
-      # 3. Setup Node.js
-      - name: Setup Node.js
+      # 3. Setup Node.js 22.15.1
+      - name: Setup Node.js 22.15.1
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.15.1
           cache: 'npm'
 
       # 4. Install Node dependencies
@@ -38,7 +38,7 @@ jobs:
       - name: Build VSCode (reh-linux-arm64-min)
         run: node node_modules/gulp/bin/gulp.js vscode-reh-linux-arm64-min
 
-      # 6. Upload artifact for debugging (optional)
+      # 6. Upload artifact (optional debug)
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
