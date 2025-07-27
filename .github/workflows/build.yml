@@ -32,7 +32,6 @@ jobs:
 
       - name: Build VSCode (reh-linux-arm64-min)
         run: |
-          npm run gulp minify-vscode-reh-web
           npm run gulp vscode-reh-linux-arm64-min-ci
 
       - name: Move build folder into workspace
