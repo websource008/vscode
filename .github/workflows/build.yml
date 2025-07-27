@@ -31,7 +31,9 @@ jobs:
         run: npm ci
 
       - name: Build VSCode (reh-linux-arm64-min)
-        run: node node_modules/gulp/bin/gulp.js compile-build
+        run: |
+          npm run gulp minify-vscode-reh-web
+          npm run gulp vscode-reh-linux-arm64-min-ci
 
       - name: Move build folder into workspace
         run: |
@@ -42,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vscode-reh-linux-arm64
-          path: .
+          path: build-output
 
   release:
     runs-on: ubuntu-latest
